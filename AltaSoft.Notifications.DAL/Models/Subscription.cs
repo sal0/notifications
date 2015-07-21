@@ -16,7 +16,7 @@ namespace AltaSoft.Notifications.DAL.Models
         public Event Event { get; set; }
 
         public int UserGroupId { get; set; }
-        public UsersGroup UserGroup { get; set; }
+        public UserGroup UserGroup { get; set; }
 
         public int ProviderId { get; set; }
         public Provider Provider { get; set; }

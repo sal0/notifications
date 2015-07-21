@@ -49,16 +49,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Context\MainContext.cs" />
     <Compile Include="Models\Application.cs" />
     <Compile Include="Common\ModelBase.cs" />
     <Compile Include="Models\Enums\QueueMessageStates.cs" />
     <Compile Include="Models\Event.cs" />
-    <Compile Include="Models\QueueMessage.cs" />
+    <Compile Include="Models\Message.cs" />
     <Compile Include="Models\Provider.cs" />
     <Compile Include="Models\Subscription.cs" />
     <Compile Include="Models\Template.cs" />
     <Compile Include="Models\User.cs" />
-    <Compile Include="Models\UsersGroup.cs" />
+    <Compile Include="Models\UserGroup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

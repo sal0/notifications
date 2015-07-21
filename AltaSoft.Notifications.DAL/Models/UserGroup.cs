@@ -10,7 +10,7 @@ namespace AltaSoft.Notifications.DAL.Models
     /// <summary>
     /// Group of users
     /// </summary>
-    public class UsersGroup : ModelBase
+    public class UserGroup : ModelBase
     {
         /// <summary>
         /// Display Name

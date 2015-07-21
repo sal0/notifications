@@ -10,7 +10,7 @@ namespace AltaSoft.Notifications.DAL.Models
     /// <summary>
     /// Queue to process send requests
     /// </summary>
-    public class QueueMessage : ModelBase
+    public class Message : ModelBase
     {
         public int UserId { get; set; }
         public User User { get; set; }
