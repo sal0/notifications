@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AltaSoft.Notifications.Web"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AltaSoft.Notifications.Service", "AltaSoft.Notifications.Service\AltaSoft.Notifications.Service.csproj", "{69C8C21B-3889-4F09-BC8C-34B2A8546296}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AltaSoft.Notifications.DAL", "AltaSoft.Notifications.DAL\AltaSoft.Notifications.DAL.csproj", "{140B7736-3C18-4D8F-B7C2-100BE71FEDAF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{69C8C21B-3889-4F09-BC8C-34B2A8546296}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{69C8C21B-3889-4F09-BC8C-34B2A8546296}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{69C8C21B-3889-4F09-BC8C-34B2A8546296}.Release|Any CPU.Build.0 = Release|Any CPU
+		{140B7736-3C18-4D8F-B7C2-100BE71FEDAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{140B7736-3C18-4D8F-B7C2-100BE71FEDAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{140B7736-3C18-4D8F-B7C2-100BE71FEDAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{140B7736-3C18-4D8F-B7C2-100BE71FEDAF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
