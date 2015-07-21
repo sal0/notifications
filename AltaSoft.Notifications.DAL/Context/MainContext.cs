@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AltaSoft.Notifications.DAL.Context
 {
-    internal class MainContext : DbContext
+    public class MainContext : DbContext
     {
         public DbSet<Application> Applications { get; set; }
         public DbSet<Event> Events { get; set; }
