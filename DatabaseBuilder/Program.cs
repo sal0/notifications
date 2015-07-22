@@ -27,6 +27,7 @@ namespace DatabaseBuilder
 
                     db.SaveChanges();
 
+                    Console.WriteLine();
                     Console.WriteLine("Database Generated - Successfully!");
                 }
             }
