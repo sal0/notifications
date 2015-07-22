@@ -44,6 +44,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -52,12 +53,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\ProviderManagerBase.cs" />
+    <Compile Include="Common\IProviderManager.cs" />
     <Compile Include="Common\ProviderProcessResult.cs" />
-    <Compile Include="MessagesManager.cs" />
+    <Compile Include="WorkerManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Providers\SendGridProviderManager.cs" />
+    <Compile Include="ProviderManagers\SMSProviderManager.cs" />
+    <Compile Include="ProviderManagers\SendGridProviderManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

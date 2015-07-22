@@ -20,6 +20,12 @@ namespace AltaSoft.Notifications.DAL
 
         public string Content { get; set; }
 
+        public int RetryCount { get; set; }
+
+        public string ErrorMessage { get; set; }
+
+        public string ErrorDetails { get; set; }
+
         public MessageStates State { get; set; }
 
         public MessagePriority Priority { get; set; }
