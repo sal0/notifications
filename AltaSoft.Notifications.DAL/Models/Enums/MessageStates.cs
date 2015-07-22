@@ -11,7 +11,7 @@ namespace AltaSoft.Notifications.DAL
         Pending = 0,
         Success = 1,
         Processing = 2,
-        Fail = 3,
+        Failed = 3,
         ProviderManagerNotFound = 4
     }
 }

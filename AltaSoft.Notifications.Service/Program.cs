@@ -10,6 +10,9 @@ namespace AltaSoft.Notifications.Service
     {
         static void Main(string[] args)
         {
+            var worker = new WorkerManager(DAL.MessagePriority.Normal);
+
+            worker.Start().Wait();
         }
     }
 }

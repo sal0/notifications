@@ -1,8 +1,9 @@
 ﻿using AltaSoft.Notifications.DAL;
 using AltaSoft.Notifications.Service.Common;
-using AltaSoft.Notifications.Service.Providers;
+using AltaSoft.Notifications.Service.ProviderManagers;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -13,6 +14,8 @@ namespace AltaSoft.Notifications.Service
 {
     public class WorkerManager
     {
+        const string EventLogKey = "AltaSoft.Notifications.Service";
+
         MessagePriority Priority;
         List<IProviderManager> ProviderManagers;
         bool IsStarted;
@@ -33,6 +36,7 @@ namespace AltaSoft.Notifications.Service
             ProviderManagers = new List<IProviderManager>();
             ProviderManagers.Add(new SendGridProviderManager());
             ProviderManagers.Add(new SMSProviderManager());
+            ProviderManagers.Add(new SignalrProviderManager());
         }
 
 
@@ -42,8 +46,16 @@ namespace AltaSoft.Notifications.Service
 
             while (IsStarted)
             {
-                await Process();
-                await Task.Delay(Delay);
+                try
+                {
+                    await Process();
+                    await Task.Delay(Delay);
+                }
+                catch (Exception ex)
+                {
+                    EventLog.WriteEntry(EventLogKey, String.Format("Process Error {0}", ex));
+                    await Task.Delay(TimeSpan.FromSeconds(5));
+                }
             }
         }
 
@@ -58,33 +70,54 @@ namespace AltaSoft.Notifications.Service
                 // 2. Process them all
                 foreach (var item in items)
                 {
-                    var pm = ProviderManagers.FirstOrDefault(x => x.Id == item.ProviderId);
-                    if (pm == null)
+                    try
                     {
-                        item.State = MessageStates.ProviderManagerNotFound;
-                        bo.Update(item);
-                        return;
+                        var pm = ProviderManagers.FirstOrDefault(x => x.Id == item.ProviderId);
+                        if (pm == null)
+                        {
+                            item.State = MessageStates.ProviderManagerNotFound;
+                            bo.Update(item);
+                            return;
+                        }
+
+                        using (var tran = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                        {
+                            var processStartDate = DateTime.Now;
+                            try
+                            {
+                                var result = await pm.Process(item);
+
+                                var duration = DateTime.Now - processStartDate;
+
+                                item.ProcessingDuration = Convert.ToInt32(duration.TotalMilliseconds);
+                                item.State = result.IsSuccess ? MessageStates.Success : MessageStates.Failed;
+                                item.RetryCount++;
+                                item.ErrorMessage = result.ErrorMessage;
+                                item.ErrorDetails = result.ErrorDetails;
+                            }
+                            catch (Exception ex)
+                            {
+                                item.State = MessageStates.Failed;
+                                item.ErrorMessage = ex.Message;
+                                item.ErrorDetails = ex.ToString();
+                            }
+
+                            bo.Update(item);
+
+                            tran.Complete();
+                        }
                     }
-
-                    using (var tran = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                    catch (Exception ex)
                     {
-                        var processStartDate = DateTime.Now;
-                        var result = await pm.Process(item);
-
-                        var duration = DateTime.Now - processStartDate;
-
-                        item.ProcessingDuration = Convert.ToInt32(duration.TotalMilliseconds);
-                        item.State = result.IsSuccess ? MessageStates.Success : MessageStates.Fail;
-                        item.RetryCount++;
-                        item.ErrorMessage = result.ErrorMessage;
-                        item.ErrorDetails = result.ErrorDetails;
-
-                        bo.Update(item);
-
-                        tran.Complete();
+                        EventLog.WriteEntry(EventLogKey, String.Format("Processing Item: {0}, Error: {1}", item.Id, ex));
                     }
                 }
             }
+        }
+
+        public void Stop()
+        {
+            IsStarted = false;
         }
     }
 }

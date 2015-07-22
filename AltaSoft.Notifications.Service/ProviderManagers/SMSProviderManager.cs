@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AltaSoft.Notifications.DAL;
 
-namespace AltaSoft.Notifications.Service.Providers
+namespace AltaSoft.Notifications.Service.ProviderManagers
 {
     public class SMSProviderManager : IProviderManager
     {
@@ -17,7 +17,7 @@ namespace AltaSoft.Notifications.Service.Providers
 
         public async Task<ProviderProcessResult> Process(Message message)
         {
-            await Task.Delay(TimeSpan.FromSeconds(1));
+            await Task.Delay(TimeSpan.FromSeconds(10));
 
             return new ProviderProcessResult { IsSuccess = true };
         }
