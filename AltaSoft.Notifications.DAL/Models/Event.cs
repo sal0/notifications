@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AltaSoft.Notifications.DAL.Models
+namespace AltaSoft.Notifications.DAL
 {
     /// <summary>
     /// Event for subscribing UserGroup

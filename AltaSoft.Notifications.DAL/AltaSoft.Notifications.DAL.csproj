@@ -49,10 +49,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BusinessObjects\MessageBusinessObject.cs" />
+    <Compile Include="Common\BusinessObjectBase.cs" />
     <Compile Include="Context\MainContext.cs" />
     <Compile Include="Models\Application.cs" />
     <Compile Include="Common\ModelBase.cs" />
-    <Compile Include="Models\Enums\QueueMessageStates.cs" />
+    <Compile Include="Models\Enums\MessagePriority.cs" />
+    <Compile Include="Models\Enums\MessageStates.cs" />
     <Compile Include="Models\Event.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\Provider.cs" />
@@ -66,6 +69,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

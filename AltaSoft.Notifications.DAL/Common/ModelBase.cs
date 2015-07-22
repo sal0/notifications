@@ -10,6 +10,7 @@ namespace AltaSoft.Notifications.DAL.Common
     {
         public int Id { get; set; }
         public DateTime RegDate { get; set; }
+        public DateTime? LastUpdateDate { get; set; }
         public byte[] RowVersion { get; set; }
     }
 }

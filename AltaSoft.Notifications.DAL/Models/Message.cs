@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AltaSoft.Notifications.DAL.Models
+namespace AltaSoft.Notifications.DAL
 {
     /// <summary>
     /// Queue to process send requests
@@ -20,6 +20,13 @@ namespace AltaSoft.Notifications.DAL.Models
 
         public string Content { get; set; }
 
-        public QueueMessageStates State { get; set; }
+        public MessageStates State { get; set; }
+
+        public MessagePriority Priority { get; set; }
+
+        /// <summary>
+        /// If null, processes immediately, otherwise waits for ProcessDate
+        /// </summary>
+        public DateTime? ProcessDate { get; set; }
     }
 }
