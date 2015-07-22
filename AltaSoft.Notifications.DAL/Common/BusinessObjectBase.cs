@@ -56,13 +56,20 @@ namespace AltaSoft.Notifications.DAL.Common
 
         public virtual List<TEntity> GetList(Expression<Func<TEntity, bool>> where, int skip, int take, out int total)
         {
-            var query = db.Set<TEntity>().Where(where);
+            var query = GetListQuery(where);
 
             total = query.Count();
 
             return query.Skip(skip).Take(take).ToList();
         }
 
+
+        protected virtual IQueryable<TEntity> GetListQuery(Expression<Func<TEntity, bool>> where)
+        {
+            var query = db.Set<TEntity>().Where(where);
+
+            return query;
+        }
 
         public void Dispose()
         {

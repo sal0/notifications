@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="Common\IProviderManager.cs" />
     <Compile Include="Common\ProviderProcessResult.cs" />
+    <Compile Include="ProviderManagers\SignalrProviderManager.cs" />
     <Compile Include="WorkerManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -71,7 +72,9 @@
       <Name>AltaSoft.Notifications.DAL</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Hubs\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

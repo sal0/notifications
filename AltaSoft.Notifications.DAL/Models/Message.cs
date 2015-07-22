@@ -34,5 +34,10 @@ namespace AltaSoft.Notifications.DAL
         /// If null, processes immediately, otherwise waits for ProcessDate
         /// </summary>
         public DateTime? ProcessDate { get; set; }
+
+        /// <summary>
+        /// Duration in MS
+        /// </summary>
+        public int ProcessingDuration { get; set; }
     }
 }

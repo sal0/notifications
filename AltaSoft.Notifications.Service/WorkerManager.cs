@@ -14,7 +14,17 @@ namespace AltaSoft.Notifications.Service
     public class WorkerManager
     {
         MessagePriority Priority;
-        List<IProviderManager> ProviderManagers { get; set; }
+        List<IProviderManager> ProviderManagers;
+        bool IsStarted;
+
+        TimeSpan Delay
+        {
+            get
+            {
+                return (Priority == MessagePriority.High) ? TimeSpan.FromMilliseconds(50) : TimeSpan.FromMilliseconds(2000);
+            }
+        }
+
 
         public WorkerManager(MessagePriority priority = MessagePriority.Normal)
         {
@@ -25,15 +35,24 @@ namespace AltaSoft.Notifications.Service
             ProviderManagers.Add(new SMSProviderManager());
         }
 
+
+        public async Task Start()
+        {
+            IsStarted = true;
+
+            while (IsStarted)
+            {
+                await Process();
+                await Task.Delay(Delay);
+            }
+        }
+
         public async Task Process()
         {
             using (var bo = new MessageBusinessObject())
             {
                 // 1. Get messages to be proceeded
-                var items = bo.GetList(x =>
-                                x.Priority == Priority
-                                && (x.State == MessageStates.Pending || x.State == MessageStates.ProviderManagerNotFound)
-                                && (x.ProcessDate == null || x.ProcessDate <= DateTime.Now));
+                var items = await bo.GetListToBeProceeded(x => x.Priority == Priority);
 
 
                 // 2. Process them all
@@ -49,8 +68,12 @@ namespace AltaSoft.Notifications.Service
 
                     using (var tran = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                     {
+                        var processStartDate = DateTime.Now;
                         var result = await pm.Process(item);
 
+                        var duration = DateTime.Now - processStartDate;
+
+                        item.ProcessingDuration = Convert.ToInt32(duration.TotalMilliseconds);
                         item.State = result.IsSuccess ? MessageStates.Success : MessageStates.Fail;
                         item.RetryCount++;
                         item.ErrorMessage = result.ErrorMessage;

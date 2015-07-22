@@ -6,20 +6,18 @@ using System.Text;
 using System.Threading.Tasks;
 using AltaSoft.Notifications.DAL;
 
-namespace AltaSoft.Notifications.Service.Providers
+namespace AltaSoft.Notifications.Service.ProviderManagers
 {
-    public class SMSProviderManager : IProviderManager
+    public class SignalrProviderManager : IProviderManager
     {
         public int Id
         {
-            get { return 2; }
+            get { return 3; }
         }
 
         public async Task<ProviderProcessResult> Process(Message message)
         {
-            await Task.Delay(TimeSpan.FromSeconds(1));
-
-            return new ProviderProcessResult { IsSuccess = true };
+            throw new NotImplementedException("yet");
         }
     }
 }
