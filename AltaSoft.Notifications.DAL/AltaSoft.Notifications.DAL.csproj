@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BusinessObjects\UserBusinessObject.cs" />
     <Compile Include="BusinessObjects\MessageBusinessObject.cs" />
     <Compile Include="Common\BusinessObjectBase.cs" />
     <Compile Include="Context\MainContext.cs" />

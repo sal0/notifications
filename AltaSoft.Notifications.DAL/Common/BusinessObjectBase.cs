@@ -48,6 +48,14 @@ namespace AltaSoft.Notifications.DAL.Common
             db.SaveChanges();
         }
 
+
+        public virtual TEntity GetById(int id)
+        {
+            var item = db.Set<TEntity>().AsNoTracking().FirstOrDefault(x => x.Id == id);
+
+            return item;
+        }
+
         public virtual List<TEntity> GetList(Expression<Func<TEntity, bool>> where)
         {
             int total;

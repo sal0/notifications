@@ -31,7 +31,7 @@ namespace AltaSoft.Notifications.DAL
         /// <summary>
         /// Id in External System, will be identified by this field, with application Id
         /// </summary>
-        public string ExternalId { get; set; }
+        public string ExternalUserId { get; set; }
 
         public int? ApplicationId { get; set; }
         public Application Application { get; set; }
