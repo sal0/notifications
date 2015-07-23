@@ -86,6 +86,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.Composition.registration" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -107,6 +109,7 @@
     <Compile Include="Hubs\RealtimeHub.cs" />
     <Compile Include="ProviderManagers\SmtpMailProviderManager.cs" />
     <Compile Include="ProviderManagers\SignalrProviderManager.cs" />
+    <Compile Include="Startup.cs" />
     <Compile Include="WorkerManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

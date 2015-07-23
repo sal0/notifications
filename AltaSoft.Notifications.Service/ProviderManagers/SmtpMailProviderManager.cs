@@ -9,9 +9,11 @@ using SendGrid;
 using System.Net.Mail;
 using System.Net;
 using System.Configuration;
+using System.ComponentModel.Composition;
 
 namespace AltaSoft.Notifications.Service.ProviderManagers
 {
+    [Export(typeof(IProviderManager))]
     public class SmtpMailProviderManager : IProviderManager
     {
         public int Id

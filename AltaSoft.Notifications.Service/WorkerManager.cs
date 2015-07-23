@@ -3,9 +3,12 @@ using AltaSoft.Notifications.Service.Common;
 using AltaSoft.Notifications.Service.ProviderManagers;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using System.ComponentModel.Composition.Hosting;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
@@ -17,9 +20,7 @@ namespace AltaSoft.Notifications.Service
         const string EventLogKey = "AltaSoft.Notifications.Service";
 
         MessagePriority Priority;
-        List<IProviderManager> ProviderManagers;
         bool IsStarted;
-
         TimeSpan Delay
         {
             get
@@ -28,22 +29,24 @@ namespace AltaSoft.Notifications.Service
             }
         }
 
+        [ImportMany]
+        public IEnumerable<IProviderManager> ProviderManagers;
+
 
         public WorkerManager(MessagePriority priority = MessagePriority.Normal)
         {
             Priority = priority;
 
-            ProviderManagers = new List<IProviderManager>();
-            ProviderManagers.Add(new SendGridProviderManager());
-            ProviderManagers.Add(new SMSProviderManager());
-            ProviderManagers.Add(new SignalrProviderManager());
-            ProviderManagers.Add(new SmtpMailProviderManager());
+            Compose();
         }
 
 
         public async Task Start()
         {
             IsStarted = true;
+
+            if (ProviderManagers == null)
+                ProviderManagers = new List<IProviderManager>();
 
             while (IsStarted)
             {
@@ -119,6 +122,16 @@ namespace AltaSoft.Notifications.Service
         public void Stop()
         {
             IsStarted = false;
+        }
+
+
+        void Compose()
+        {
+            //Create the CompositionContainer with the parts in the catalog.
+            var container = new CompositionContainer(new AssemblyCatalog(Assembly.GetExecutingAssembly()));
+
+            //Fill the imports of this object
+            container.ComposeParts(this);
         }
     }
 }
