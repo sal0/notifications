@@ -19,6 +19,8 @@ namespace AltaSoft.Notifications.DAL
                 Create(user);
                 return;
             }
+
+
             user.Id = existingUser.Id;
             user.RegDate = existingUser.RegDate;
 

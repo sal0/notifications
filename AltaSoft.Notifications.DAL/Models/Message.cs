@@ -18,6 +18,8 @@ namespace AltaSoft.Notifications.DAL
         public int ProviderId { get; set; }
         public Provider Provider { get; set; }
 
+        public string Subject { get; set; }
+
         public string Content { get; set; }
 
         public int RetryCount { get; set; }

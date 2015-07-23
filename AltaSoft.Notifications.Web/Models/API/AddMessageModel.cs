@@ -13,6 +13,7 @@ namespace AltaSoft.Notifications.Web.Models.API
 
         public string ExternalUserId { get; set; }
         public int ProviderId { get; set; }
+        public string Subject { get; set; }
         public string Content { get; set; }
         public DateTime? ProcessDate { get; set; }
         public MessagePriority? Priority { get; set; }

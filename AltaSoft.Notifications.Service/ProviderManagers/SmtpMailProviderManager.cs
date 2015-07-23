@@ -12,26 +12,25 @@ using System.Configuration;
 
 namespace AltaSoft.Notifications.Service.ProviderManagers
 {
-    public class SendGridProviderManager : IProviderManager
+    public class SmtpMailProviderManager : IProviderManager
     {
         public int Id
         {
-            get { return 1; }
+            get { return 4; }
         }
 
         public async Task<ProviderProcessResult> Process(Message message)
         {
             try
             {
-                var msg = new SendGridMessage();
-                msg.AddTo(message.User.Email);
-                msg.From = new MailAddress(message.User.Application.EmailFromAddress, message.User.Application.EmailFromFullName);
-                msg.Subject = message.Subject;
-                msg.Html = message.Content;
+                var mail = new MailMessage();
+                var SmtpServer = new SmtpClient();
 
-                var transportWeb = new Web(ConfigurationManager.AppSettings["SendGridSecretKey"]);
+                mail.To.Add(message.User.Email);
+                mail.Subject = message.Subject;
+                mail.Body = message.Content;
 
-                await transportWeb.DeliverAsync(msg);
+                await SmtpServer.SendMailAsync(mail);
 
                 return new ProviderProcessResult { IsSuccess = true };
             }

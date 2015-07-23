@@ -50,6 +50,7 @@ namespace AltaSoft.Notifications.Web.Controllers
                 {
                     UserId = userId,
                     ProviderId = model.ProviderId,
+                    Subject = model.Subject,
                     Content = model.Content,
                     ProcessDate = model.ProcessDate,
                     Priority = model.Priority ?? MessagePriority.Normal

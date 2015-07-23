@@ -37,6 +37,7 @@ namespace AltaSoft.Notifications.Service
             ProviderManagers.Add(new SendGridProviderManager());
             ProviderManagers.Add(new SMSProviderManager());
             ProviderManagers.Add(new SignalrProviderManager());
+            ProviderManagers.Add(new SmtpMailProviderManager());
         }
 
 

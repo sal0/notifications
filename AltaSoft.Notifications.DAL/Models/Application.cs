@@ -31,5 +31,9 @@ namespace AltaSoft.Notifications.DAL
         /// for SignalR provider, to get user id, based on Token and IPAddress
         /// </summary>
         public string CheckUserIdUrl { get; set; }
+
+        public string EmailFromAddress { get; set; }
+
+        public string EmailFromFullName { get; set; }
     }
 }
