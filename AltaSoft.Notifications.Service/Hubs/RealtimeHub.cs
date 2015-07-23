@@ -4,6 +4,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,25 +21,37 @@ namespace AltaSoft.Notifications.Service.Hubs
 
         public override async Task OnConnected()
         {
-            var externalApplicationIdString = Context.QueryString[QUERY_STRING_APPLICATION_KEY];
+            var applicationIdString = Context.QueryString[QUERY_STRING_APPLICATION_KEY];
             var externalUserToken = Context.QueryString[QUERY_STRING_TOKEN_KEY];
             var externalUserIPAddress = GetIPAddress();
-            var externalUserId = await GetExternalUserId(externalUserToken, externalUserIPAddress);
+            int applicationId;
+            string checkUserIdUrl;
 
-            int externalApplicationId;
-
-            if (!Int32.TryParse(externalApplicationIdString, out externalApplicationId) || String.IsNullOrWhiteSpace(externalUserId))
+            if (!Int32.TryParse(applicationIdString, out applicationId))
                 return;
 
+            using (var bo = new ApplicationBusinessObject())
+            {
+                var application = bo.GetById(applicationId);
+                if (application == null)
+                    return;
+
+                checkUserIdUrl = application.CheckUserIdUrl;
+            }
+
+            var externalUserId = await GetExternalUserId(checkUserIdUrl, externalUserToken, externalUserIPAddress);
+
+            if (String.IsNullOrWhiteSpace(externalUserId))
+                return;
 
             // Check if user exists in our database
             using (var bo = new UserBusinessObject())
             {
-                var user = bo.GetList(x => x.ApplicationId == externalApplicationId && x.ExternalUserId == externalUserId).FirstOrDefault();
+                var user = bo.GetList(x => x.ApplicationId == applicationId && x.ExternalUserId == externalUserId).FirstOrDefault();
                 if (user == null) return;
             }
 
-            GroupName = externalApplicationId + externalUserId;
+            GroupName = applicationId + externalUserId;
 
 
             await Groups.Add(Context.ConnectionId, GroupName);
@@ -54,15 +67,18 @@ namespace AltaSoft.Notifications.Service.Hubs
         }
 
 
-
-        async Task<string> GetExternalUserId(string token, string ipaddress)
+        async Task<string> GetExternalUserId(string url, string token, string ipaddress)
         {
-            return "";
+            var client = new HttpClient();
+            var result = await client.GetStringAsync(url + "?token=" + token + "&ipaddress=" + ipaddress);
+
+            return result;
         }
 
         string GetIPAddress()
         {
-            return "";
+            var ipAddress = (string)Context.Request.Environment["server.RemoteIpAddress"];
+            return ipAddress;
         }
     }
 }

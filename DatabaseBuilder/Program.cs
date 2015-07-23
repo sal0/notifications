@@ -30,7 +30,7 @@ namespace DatabaseBuilder
                     var application = db.Applications.Add(new Application { SecretKey = "test", Username = "EZ", Password = "123", RegDate = DateTime.Now });
 
                     // Test Users
-                    var user = db.Users.Add(new User { FirstName = "Ezeki", FullName = "Ezeki Zibzibadze", MobileNumber = "995593159115", Email = "ez@jok.io", ApplicationId = application.Id, RegDate = DateTime.Now });
+                    var user = db.Users.Add(new User { FirstName = "Ezeki", FullName = "Ezeki Zibzibadze", ExternalUserId = "1", MobileNumber = "995593159115", Email = "ez@jok.io", ApplicationId = application.Id, RegDate = DateTime.Now });
 
                     // Test Messages
                     db.Messages.Add(new Message { Provider = provider1, UserId = user.Id, Content = "Test1", RegDate = DateTime.Now });

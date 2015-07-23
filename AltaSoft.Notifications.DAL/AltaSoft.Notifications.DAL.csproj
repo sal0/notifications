@@ -49,6 +49,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BusinessObjects\ApplicationBusinessObject.cs" />
+    <Compile Include="BusinessObjects\ProviderBusinessObject.cs" />
     <Compile Include="BusinessObjects\UserBusinessObject.cs" />
     <Compile Include="BusinessObjects\MessageBusinessObject.cs" />
     <Compile Include="Common\BusinessObjectBase.cs" />

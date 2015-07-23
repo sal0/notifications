@@ -58,8 +58,9 @@ namespace AltaSoft.Notifications.DAL.Common
 
         public virtual List<TEntity> GetList(Expression<Func<TEntity, bool>> where)
         {
-            int total;
-            return GetList(where, 0, int.MaxValue, out total);
+            var query = GetListQuery(where);
+
+            return query.ToList();
         }
 
         public virtual List<TEntity> GetList(Expression<Func<TEntity, bool>> where, int skip, int take, out int total)
@@ -68,7 +69,7 @@ namespace AltaSoft.Notifications.DAL.Common
 
             total = query.Count();
 
-            return query.Skip(skip).Take(take).ToList();
+            return query.OrderBy(x => x.Id).Skip(skip).Take(take).ToList();
         }
 
 
