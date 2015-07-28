@@ -48,8 +48,16 @@ textarea {
 
 .body-content {
     min-height: 600px;
+    padding-top: 10px;
 }
 
 footer {
     color: gray;
+}
+
+
+
+.body-content dl dd {
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
