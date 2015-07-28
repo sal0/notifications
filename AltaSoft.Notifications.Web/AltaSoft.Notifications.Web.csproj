@@ -178,6 +178,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\API\AddMessageModel.cs" />
+    <Compile Include="Models\API\SaveUsersModel.cs" />
     <Compile Include="Models\API\SaveUserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

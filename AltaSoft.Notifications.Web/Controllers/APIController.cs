@@ -108,5 +108,48 @@ namespace AltaSoft.Notifications.Web.Controllers
 
             return new { IsSuccess = true };
         }
+
+        [HttpPost]
+        public dynamic SaveUsers(SaveUsersModel model)
+        {
+            try
+            {
+                if (model == null)
+                    throw new Exception("Please pass model");
+
+                using (var bo = new ApplicationBusinessObject())
+                {
+                    if (!bo.Check(model.ApplicationId, model.ApplicationSecretKey))
+                        throw new Exception("Invalid application credentials");
+                }
+
+
+                foreach (var item in model.Users)
+                {
+                    var user = new User
+                    {
+                        ApplicationId = model.ApplicationId,
+                        ExternalUserId = item.ExternalUserId,
+                        FirstName = item.FirstName,
+                        FullName = item.FullName,
+                        Email = item.Email,
+                        MobileNumber = item.MobileNumber
+                    };
+
+                    using (var bo = new UserBusinessObject())
+                    {
+                        bo.Save(user);
+                    }
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                return new { Error = ex.Message, ErrorDetails = ex.ToString() };
+            }
+
+            return new { IsSuccess = true };
+        }
     }
 }
