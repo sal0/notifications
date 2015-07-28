@@ -1,5 +1,7 @@
 ﻿using AltaSoft.Notifications.DAL;
 using Microsoft.AspNet.SignalR;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -56,6 +58,9 @@ namespace AltaSoft.Notifications.Service.Hubs
 
             await Groups.Add(Context.ConnectionId, GroupName);
 
+            Clients.Caller.AuthenticationSuccess(applicationId, externalUserId);
+            Clients.Group(GroupName).UserConnected(externalUserId);
+
             await base.OnConnected();
         }
 
@@ -72,7 +77,11 @@ namespace AltaSoft.Notifications.Service.Hubs
             var client = new HttpClient();
             var result = await client.GetStringAsync(url + "?token=" + token + "&ipaddress=" + ipaddress);
 
-            return result;
+            var o = JObject.Parse(result);
+            var isSuccess = (bool)o["IsSuccess"];
+            var userID = (string)o["UserID"];
+
+            return isSuccess ? userID : String.Empty;
         }
 
         string GetIPAddress()
