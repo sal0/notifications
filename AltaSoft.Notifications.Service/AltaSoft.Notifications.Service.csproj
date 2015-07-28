@@ -90,7 +90,10 @@
     <Reference Include="System.ComponentModel.Composition.registration" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.configuration" />
+    <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Web.Cors, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Cors.5.0.0\lib\net45\System.Web.Cors.dll</HintPath>
@@ -107,8 +110,20 @@
     <Compile Include="Common\IProviderManager.cs" />
     <Compile Include="Common\ProviderProcessResult.cs" />
     <Compile Include="Hubs\RealtimeHub.cs" />
+    <Compile Include="Service\ProjectInstaller.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Service\ProjectInstaller.Designer.cs">
+      <DependentUpon>ProjectInstaller.cs</DependentUpon>
+    </Compile>
     <Compile Include="ProviderManagers\SmtpMailProviderManager.cs" />
     <Compile Include="ProviderManagers\SignalrProviderManager.cs" />
+    <Compile Include="Service\NotificationsService.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Service\NotificationsService.Designer.cs">
+      <DependentUpon>NotificationsService.cs</DependentUpon>
+    </Compile>
     <Compile Include="Startup.cs" />
     <Compile Include="WorkerManager.cs" />
     <Compile Include="Program.cs" />
@@ -126,7 +141,11 @@
       <Name>AltaSoft.Notifications.DAL</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Service\ProjectInstaller.resx">
+      <DependentUpon>ProjectInstaller.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
