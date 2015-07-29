@@ -12,7 +12,7 @@ namespace AltaSoft.Notifications.Web.Controllers
     public class APIController : ApiController
     {
         [HttpPost]
-        public dynamic AddMessage(AddMessageModel model)
+        public dynamic Send(SendModel model)
         {
             try
             {
@@ -36,29 +36,42 @@ namespace AltaSoft.Notifications.Web.Controllers
                         throw new Exception("Provider not found");
                 }
 
-                int userId;
-                using (var bo = new UserBusinessObject())
-                {
-                    var user = bo.GetList(x => x.ApplicationId == model.ApplicationId && x.ExternalUserId == model.ExternalUserId).FirstOrDefault();
-                    if (user == null)
-                        throw new Exception("User not found");
 
-                    userId = user.Id;
-                }
 
-                var message = new Message
-                {
-                    UserId = userId,
-                    ProviderId = model.ProviderId,
-                    Subject = model.Subject,
-                    Content = model.Content,
-                    ProcessDate = model.ProcessDate,
-                    Priority = model.Priority ?? MessagePriority.Normal
-                };
+                if (model.ExternalUserIds == null)
+                    model.ExternalUserIds = new List<string>();
 
-                using (var bo = new MessageBusinessObject())
+                if (!String.IsNullOrEmpty(model.ExternalUserId))
+                    model.ExternalUserIds.Add(model.ExternalUserId);
+
+                var userInfos = GetUserInfos(model.ApplicationId, model.ExternalUserIds, model.ProviderId);
+
+                if (!String.IsNullOrEmpty(model.To))
+                    userInfos.Add(new Tuple<int?, string>(null, model.To));
+
+
+                if (userInfos.Count == 0)
+                    throw new Exception("Please set: ExternalUserId, ExternalUserIds, or To");
+
+
+                foreach (var info in userInfos)
                 {
-                    bo.Create(message);
+                    var message = new Message
+                    {
+                        UserId = info.Item1,
+                        To = info.Item2,
+                        ProviderId = model.ProviderId,
+                        ApplicationId = model.ApplicationId,
+                        Subject = model.Subject,
+                        Content = model.Content,
+                        ProcessDate = model.ProcessDate,
+                        Priority = model.Priority ?? MessagePriority.Normal
+                    };
+
+                    using (var bo = new MessageBusinessObject())
+                    {
+                        bo.Create(message);
+                    }
                 }
 
             }
@@ -150,6 +163,42 @@ namespace AltaSoft.Notifications.Web.Controllers
             }
 
             return new { IsSuccess = true };
+        }
+
+
+        List<Tuple<int?, string>> GetUserInfos(int applicationId, List<string> externalUserIds, int providerId)
+        {
+            var result = new List<Tuple<int?, string>>();
+
+            foreach (var item in externalUserIds)
+            {
+                using (var bo = new UserBusinessObject())
+                {
+                    var user = bo.GetList(x => x.ApplicationId == applicationId && x.ExternalUserId == item).FirstOrDefault();
+                    if (user == null)
+                        continue;
+
+                    var to = GetToByProvider(user, providerId);
+                    if (String.IsNullOrEmpty(to))
+                        continue;
+
+                    result.Add(new Tuple<int?, string>(user.Id, to));
+                }
+            }
+
+            return result;
+        }
+
+        string GetToByProvider(User user, int providerId)
+        {
+            switch (providerId)
+            {
+                case 1: return user.Email;
+                case 2: return user.MobileNumber;
+                case 3: return user.ExternalUserId;
+                case 4: return user.Email;
+                default: return String.Empty;
+            }
         }
     }
 }

@@ -19,7 +19,8 @@ namespace AltaSoft.Notifications.DAL
             query = query.Where(x => x.ProcessDate == null || x.ProcessDate <= DateTime.Now);
 
             query = query.Include(x => x.Provider);
-            query = query.Include(x => x.User.Application);
+            query = query.Include(x => x.User);
+            query = query.Include(x => x.Application);
 
             var items = query.ToList();
 

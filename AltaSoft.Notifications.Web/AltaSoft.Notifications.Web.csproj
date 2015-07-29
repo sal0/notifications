@@ -139,6 +139,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="App_Start\WorkersConfig.cs" />
     <Compile Include="Areas\HelpPage\ApiDescriptionExtensions.cs" />
     <Compile Include="Areas\HelpPage\App_Start\HelpPageConfig.cs" />
     <Compile Include="Areas\HelpPage\Controllers\HelpController.cs" />
@@ -280,6 +281,10 @@
     <ProjectReference Include="..\AltaSoft.Notifications.DAL\AltaSoft.Notifications.DAL.csproj">
       <Project>{140b7736-3c18-4d8f-b7c2-100be71fedaf}</Project>
       <Name>AltaSoft.Notifications.DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AltaSoft.Notifications.Service\AltaSoft.Notifications.Service.csproj">
+      <Project>{69c8c21b-3889-4f09-bc8c-34b2a8546296}</Project>
+      <Name>AltaSoft.Notifications.Service</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

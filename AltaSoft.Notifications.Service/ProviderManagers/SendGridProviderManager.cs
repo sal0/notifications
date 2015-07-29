@@ -26,8 +26,8 @@ namespace AltaSoft.Notifications.Service.ProviderManagers
             try
             {
                 var msg = new SendGridMessage();
-                msg.AddTo(message.User.Email);
-                msg.From = new MailAddress(message.User.Application.EmailFromAddress, message.User.Application.EmailFromFullName);
+                msg.AddTo(message.To);
+                msg.From = new MailAddress(message.Application.EmailFromAddress, message.Application.EmailFromFullName);
                 msg.Subject = message.Subject;
                 msg.Html = message.Content;
 

@@ -12,11 +12,16 @@ namespace AltaSoft.Notifications.DAL
     /// </summary>
     public class Message : ModelBase
     {
-        public int UserId { get; set; }
+        public int? UserId { get; set; }
         public User User { get; set; }
 
         public int ProviderId { get; set; }
         public Provider Provider { get; set; }
+
+        public int ApplicationId { get; set; }
+        public Application Application { get; set; }
+
+        public string To { get; set; }
 
         public string Subject { get; set; }
 

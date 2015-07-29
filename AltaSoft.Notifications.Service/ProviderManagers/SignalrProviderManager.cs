@@ -23,7 +23,7 @@ namespace AltaSoft.Notifications.Service.ProviderManagers
 
         public async Task<ProviderProcessResult> Process(Message message)
         {
-            var groupName = message.User.ApplicationId + message.User.ExternalUserId;
+            var groupName = message.ApplicationId + message.To;
 
             var conn = GlobalHost.ConnectionManager.GetHubContext<RealtimeHub>().Clients.Group(groupName);
 

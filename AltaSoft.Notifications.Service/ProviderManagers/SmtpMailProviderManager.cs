@@ -28,7 +28,7 @@ namespace AltaSoft.Notifications.Service.ProviderManagers
                 var mail = new MailMessage();
                 var SmtpServer = new SmtpClient();
 
-                mail.To.Add(message.User.Email);
+                mail.To.Add(message.To);
                 mail.Subject = message.Subject;
                 mail.Body = message.Content;
 

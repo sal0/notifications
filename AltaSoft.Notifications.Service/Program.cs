@@ -28,8 +28,10 @@ namespace AltaSoft.Notifications.Service
 
             var url = ConfigurationManager.AppSettings["SignalrUrl"];
             var worker = new WorkerManager(DAL.MessagePriority.Normal);
+            var worker2 = new WorkerManager(DAL.MessagePriority.High);
 
             worker.Start();
+            worker2.Start();
 
             using (WebApp.Start(url))
             {
