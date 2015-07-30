@@ -13,11 +13,11 @@ namespace AltaSoft.Notifications.DAL
     /// </summary>
     public class Event : ModelBase
     {
-        [Index("IX_Application_Key", 1)]
+        //[Index("IX_Application_Key", 1, IsUnique = true)]
         public int ApplicationId { get; set; }
         public Application Application { get; set; }
 
-        [Index("IX_Application_Key", 2)]
+        //[Index("IX_Application_Key", 2, IsUnique = true)]
         /// <summary>
         /// Will be identified by this field
         /// </summary>

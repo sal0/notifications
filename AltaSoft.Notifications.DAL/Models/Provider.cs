@@ -13,7 +13,7 @@ namespace AltaSoft.Notifications.DAL
     /// </summary>
     public class Provider : ModelBase
     {
-        [Index]
+        //[Index("IX_Key", IsUnique = true)]
         /// <summary>
         /// Will be identified by this field
         /// </summary>

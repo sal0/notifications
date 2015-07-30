@@ -13,15 +13,15 @@ namespace AltaSoft.Notifications.DAL
     /// </summary>
     public class Subscription : ModelBase
     {
-        [Index("IX_Event_User_Provider", 1)]
+        [Index("IX_Event_User_Provider", 1, IsUnique = true)]
         public int EventId { get; set; }
         public Event Event { get; set; }
 
-        [Index("IX_Event_User_Provider", 2)]
+        [Index("IX_Event_User_Provider", 2, IsUnique = true)]
         public int UserId { get; set; }
         public User User { get; set; }
 
-        [Index("IX_Event_User_Provider", 3)]
+        [Index("IX_Event_User_Provider", 3, IsUnique = true)]
         public int ProviderId { get; set; }
         public Provider Provider { get; set; }
     }
