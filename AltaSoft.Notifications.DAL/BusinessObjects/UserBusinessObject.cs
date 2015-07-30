@@ -11,6 +11,11 @@ namespace AltaSoft.Notifications.DAL
 {
     public class UserBusinessObject : BusinessObjectBase<User>
     {
+        public User GetByExternalUserId(int applicationId, string externalUserId)
+        {
+            return db.Users.AsNoTracking().FirstOrDefault(x => x.ApplicationId == applicationId && x.ExternalUserId == externalUserId);
+        }
+
         public void Save(User user)
         {
             var existingUser = this.GetList(x => x.ApplicationId == user.ApplicationId && x.ExternalUserId == user.ExternalUserId).FirstOrDefault();

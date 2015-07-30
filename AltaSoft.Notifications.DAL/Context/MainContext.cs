@@ -16,9 +16,8 @@ namespace AltaSoft.Notifications.DAL.Context
         public DbSet<Provider> Providers { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<User> Users { get; set; }
-        //public DbSet<Event> Events { get; set; }
-        //public DbSet<Subscription> Subscriptions { get; set; }
-        //public DbSet<Template> Templates { get; set; }
-        //public DbSet<UserGroup> UserGroups { get; set; }
+        public DbSet<Event> Events { get; set; }
+        public DbSet<Subscription> Subscriptions { get; set; }
+        public DbSet<Template> Templates { get; set; }
     }
 }

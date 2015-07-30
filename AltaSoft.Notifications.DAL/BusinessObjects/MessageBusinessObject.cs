@@ -13,7 +13,7 @@ namespace AltaSoft.Notifications.DAL
     {
         public async Task<List<Message>> GetListToBeProceeded(Expression<Func<Message, bool>> where)
         {
-            var query = GetListQuery(where);
+            var query = db.Set<Message>().Where(where);
 
             query = query.Where(x => x.State == MessageStates.Pending || x.State == MessageStates.ProviderManagerNotFound);
             query = query.Where(x => x.ProcessDate == null || x.ProcessDate <= DateTime.Now);

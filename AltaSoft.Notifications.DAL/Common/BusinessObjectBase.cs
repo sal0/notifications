@@ -56,7 +56,7 @@ namespace AltaSoft.Notifications.DAL.Common
             return item;
         }
 
-        public virtual List<TEntity> GetList(Expression<Func<TEntity, bool>> where)
+        public virtual List<TEntity> GetList(Expression<Func<TEntity, bool>> where = null)
         {
             var query = GetListQuery(where);
 
@@ -75,7 +75,7 @@ namespace AltaSoft.Notifications.DAL.Common
 
         protected virtual IQueryable<TEntity> GetListQuery(Expression<Func<TEntity, bool>> where)
         {
-            var query = db.Set<TEntity>().Where(where);
+            var query = db.Set<TEntity>().AsNoTracking().Where(where);
 
             return query;
         }

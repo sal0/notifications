@@ -11,6 +11,11 @@ namespace AltaSoft.Notifications.DAL
 {
     public class ProviderBusinessObject : BusinessObjectBase<Provider>
     {
+        public Provider GetByKey(string key)
+        {
+            key = key.ToLower();
 
+            return db.Providers.AsNoTracking().FirstOrDefault(x => x.Key.ToLower() == key);
+        }
     }
 }

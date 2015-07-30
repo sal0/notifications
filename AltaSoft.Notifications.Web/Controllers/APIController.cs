@@ -12,8 +12,10 @@ namespace AltaSoft.Notifications.Web.Controllers
     public class APIController : ApiController
     {
         [HttpPost]
-        public dynamic Send(SendModel model)
+        public APIResult<List<int>> Send(SendModel model)
         {
+            var messageIds = new List<int>();
+
             try
             {
                 if (model == null)
@@ -29,9 +31,10 @@ namespace AltaSoft.Notifications.Web.Controllers
                     throw new Exception("Content can't be empty");
 
 
+                Provider provider;
                 using (var bo = new ProviderBusinessObject())
                 {
-                    var provider = bo.GetById(model.ProviderId);
+                    provider = bo.GetByKey(model.ProviderKey);
                     if (provider == null)
                         throw new Exception("Provider not found");
                 }
@@ -44,7 +47,7 @@ namespace AltaSoft.Notifications.Web.Controllers
                 if (!String.IsNullOrEmpty(model.ExternalUserId))
                     model.ExternalUserIds.Add(model.ExternalUserId);
 
-                var userInfos = GetUserInfos(model.ApplicationId, model.ExternalUserIds, model.ProviderId);
+                var userInfos = GetUserInfos(model.ApplicationId, model.ExternalUserIds, provider.Id);
 
                 if (!String.IsNullOrEmpty(model.To))
                     userInfos.Add(new Tuple<int?, string>(null, model.To));
@@ -53,6 +56,7 @@ namespace AltaSoft.Notifications.Web.Controllers
                 if (userInfos.Count == 0)
                     throw new Exception("Please set: ExternalUserId, ExternalUserIds, or To");
 
+                var groupId = Guid.NewGuid();
 
                 foreach (var info in userInfos)
                 {
@@ -60,31 +64,32 @@ namespace AltaSoft.Notifications.Web.Controllers
                     {
                         UserId = info.Item1,
                         To = info.Item2,
-                        ProviderId = model.ProviderId,
+                        ProviderId = provider.Id,
                         ApplicationId = model.ApplicationId,
                         Subject = model.Subject,
                         Content = model.Content,
                         ProcessDate = model.ProcessDate,
+                        GroupId = groupId,
                         Priority = model.Priority ?? MessagePriority.Normal
                     };
 
                     using (var bo = new MessageBusinessObject())
                     {
-                        bo.Create(message);
+                        var id = bo.Create(message);
+                        messageIds.Add(id);
                     }
                 }
-
             }
             catch (Exception ex)
             {
-                return new { Error = ex.Message, ErrorDetails = ex.ToString() };
+                return new APIResult<List<int>>(ex.Message, ex.ToString());
             }
 
-            return new { IsSuccess = true };
+            return new APIResult<List<int>>(messageIds);
         }
 
         [HttpPost]
-        public dynamic SaveUser(SaveUserModel model)
+        public APIResult SaveUser(SaveUserModel model)
         {
             try
             {
@@ -116,14 +121,14 @@ namespace AltaSoft.Notifications.Web.Controllers
             }
             catch (Exception ex)
             {
-                return new { Error = ex.Message, ErrorDetails = ex.ToString() };
+                return new APIResult(ex.Message, ex.ToString());
             }
 
-            return new { IsSuccess = true };
+            return new APIResult();
         }
 
         [HttpPost]
-        public dynamic SaveUsers(SaveUsersModel model)
+        public APIResult SaveUsers(SaveUsersModel model)
         {
             try
             {
@@ -159,11 +164,324 @@ namespace AltaSoft.Notifications.Web.Controllers
             }
             catch (Exception ex)
             {
-                return new { Error = ex.Message, ErrorDetails = ex.ToString() };
+                return new APIResult(ex.Message, ex.ToString());
             }
 
-            return new { IsSuccess = true };
+            return new APIResult();
         }
+
+        [HttpPost]
+        public APIResult SaveEvent(SaveEventViewModel model)
+        {
+            try
+            {
+                if (model == null)
+                    throw new Exception("Please pass model");
+
+                using (var bo = new ApplicationBusinessObject())
+                {
+                    if (!bo.Check(model.ApplicationId, model.ApplicationSecretKey))
+                        throw new Exception("Invalid application credentials");
+                }
+
+                using (var bo = new EventBusinessObject())
+                {
+                    var item = new Event
+                    {
+                        ApplicationId = model.ApplicationId,
+                        Key = model.Key,
+                        Description = model.Description
+                    };
+
+                    bo.Save(item);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new APIResult(ex.Message, ex.ToString());
+            }
+
+            return new APIResult();
+        }
+
+        [HttpPost]
+        public APIResult DeleteEvent(DeleteEventModel model)
+        {
+            try
+            {
+                if (model == null)
+                    throw new Exception("Please pass model");
+
+                using (var bo = new ApplicationBusinessObject())
+                {
+                    if (!bo.Check(model.ApplicationId, model.ApplicationSecretKey))
+                        throw new Exception("Invalid application credentials");
+                }
+
+                using (var bo = new EventBusinessObject())
+                {
+                    bo.Delete(model.ApplicationId, model.EventKey);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new APIResult(ex.Message, ex.ToString());
+            }
+
+            return new APIResult();
+        }
+
+        [HttpPost]
+        public APIResult SubscribeEvent(SubscribeUserModel model)
+        {
+            try
+            {
+                if (model == null)
+                    throw new Exception("Please pass model");
+
+                using (var bo = new ApplicationBusinessObject())
+                {
+                    if (!bo.Check(model.ApplicationId, model.ApplicationSecretKey))
+                        throw new Exception("Invalid application credentials");
+                }
+
+                int eventId;
+                using (var bo = new EventBusinessObject())
+                {
+                    var ev = bo.GetByKey(model.ApplicationId, model.EventKey);
+                    if (ev == null)
+                        throw new Exception("Event not found");
+
+                    eventId = ev.Id;
+                }
+
+                int userId;
+                using (var bo = new UserBusinessObject())
+                {
+                    var user = bo.GetByExternalUserId(model.ApplicationId, model.ExternalUserId);
+                    if (user == null)
+                        throw new Exception("User not found");
+
+                    userId = user.Id;
+                }
+
+                Provider provider;
+                using (var bo = new ProviderBusinessObject())
+                {
+                    provider = bo.GetByKey(model.ProviderKey);
+                    if (provider == null)
+                        throw new Exception("Provider not found");
+                }
+
+
+                var subscription = new Subscription
+                {
+                    EventId = eventId,
+                    UserId = userId,
+                    ProviderId = provider.Id
+                };
+
+                using (var bo = new SubscriptionBusinessObject())
+                {
+                    bo.Save(subscription);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new APIResult(ex.Message, ex.ToString());
+            }
+
+            return new APIResult();
+        }
+
+        [HttpPost]
+        public APIResult UnsubscribeEvent(SubscribeUserModel model)
+        {
+            try
+            {
+                if (model == null)
+                    throw new Exception("Please pass model");
+
+                using (var bo = new ApplicationBusinessObject())
+                {
+                    if (!bo.Check(model.ApplicationId, model.ApplicationSecretKey))
+                        throw new Exception("Invalid application credentials");
+                }
+
+                int eventId;
+                using (var bo = new EventBusinessObject())
+                {
+                    var ev = bo.GetByKey(model.ApplicationId, model.EventKey);
+                    if (ev == null)
+                        throw new Exception("Event not found");
+
+                    eventId = ev.Id;
+                }
+
+                int userId;
+                using (var bo = new UserBusinessObject())
+                {
+                    var user = bo.GetByExternalUserId(model.ApplicationId, model.ExternalUserId);
+                    if (user == null)
+                        throw new Exception("User not found");
+
+                    userId = user.Id;
+                }
+
+                Provider provider;
+                using (var bo = new ProviderBusinessObject())
+                {
+                    provider = bo.GetByKey(model.ProviderKey);
+                    if (provider == null)
+                        throw new Exception("Provider not found");
+                }
+
+
+                var subscription = new Subscription
+                {
+                    EventId = eventId,
+                    UserId = userId,
+                    ProviderId = provider.Id
+                };
+
+                using (var bo = new SubscriptionBusinessObject())
+                {
+                    bo.Unsubscribe(subscription);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new APIResult(ex.Message, ex.ToString());
+            }
+
+            return new APIResult();
+        }
+
+
+
+        [HttpGet]
+        public APIResult<List<Event>> Events(ApplicationCredentialsModel model)
+        {
+            try
+            {
+                if (model == null)
+                    throw new Exception("Please pass model");
+
+                using (var bo = new ApplicationBusinessObject())
+                {
+                    if (!bo.Check(model.ApplicationId, model.ApplicationSecretKey))
+                        throw new Exception("Invalid application credentials");
+                }
+
+                using (var bo = new EventBusinessObject())
+                {
+                    var result = bo.GetList();
+
+                    return new APIResult<List<Event>>(result);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new APIResult<List<Event>>(ex.Message, ex.ToString());
+            }
+        }
+
+        [HttpGet]
+        public APIResult<List<SubscriptionResult>> Subscriptions(GetSubscriptionsModel model)
+        {
+            try
+            {
+                if (model == null)
+                    throw new Exception("Please pass model");
+
+                using (var bo = new ApplicationBusinessObject())
+                {
+                    if (!bo.Check(model.ApplicationId, model.ApplicationSecretKey))
+                        throw new Exception("Invalid application credentials");
+                }
+
+                var eventKeys = new List<string>();
+                var providerKeys = new List<string>();
+                var userKeys = new List<string>();
+
+                if (!String.IsNullOrEmpty(model.EventKeys))
+                    eventKeys = model.EventKeys.Split(',').ToList();
+
+                if (!String.IsNullOrEmpty(model.ProviderIds))
+                    providerKeys = model.ProviderIds.Split(',').ToList();
+
+                if (!String.IsNullOrEmpty(model.ExternalUserKeys))
+                    userKeys = model.ExternalUserKeys.Split(',').ToList();
+
+
+                using (var bo = new SubscriptionBusinessObject())
+                {
+                    var items = bo.GetList(model.ApplicationId, eventKeys, providerKeys, userKeys);
+
+                    var result = items.Select(x => new SubscriptionResult
+                    {
+                        EventKey = x.Event.Key,
+                        ProviderKey = x.Provider.Key,
+                        ExternalUserId = x.User.ExternalUserId
+                    }).ToList();
+
+                    return new APIResult<List<SubscriptionResult>>(result);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new APIResult<List<SubscriptionResult>>(ex.Message, ex.ToString());
+            }
+        }
+
+        [HttpGet]
+        public APIResult<List<Message>> Messages(GetMessagesModel model)
+        {
+            try
+            {
+                if (model == null)
+                    throw new Exception("Please pass model");
+
+                using (var bo = new ApplicationBusinessObject())
+                {
+                    if (!bo.Check(model.ApplicationId, model.ApplicationSecretKey))
+                        throw new Exception("Invalid application credentials");
+                }
+
+                if (String.IsNullOrEmpty(model.Ids))
+                    throw new Exception("Please pass Ids parameter");
+
+                var ids = model.Ids.Split(',')
+                    .Select(x =>
+                    {
+                        int i;
+                        return Int32.TryParse(x, out i) ? (int?)i : null;
+                    })
+                    .Where(x => x.HasValue)
+                    .ToList();
+
+
+                if (ids.Count == 0)
+                    return new APIResult<List<Message>>(new List<Message>());
+
+
+                using (var bo = new MessageBusinessObject())
+                {
+                    var result = bo.GetList(x => ids.Contains(x.Id));
+
+                    return new APIResult<List<Message>>(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new APIResult<List<Message>>(ex.Message, ex.ToString());
+            }
+        }
+
 
 
         List<Tuple<int?, string>> GetUserInfos(int applicationId, List<string> externalUserIds, int providerId)
@@ -174,7 +492,7 @@ namespace AltaSoft.Notifications.Web.Controllers
             {
                 using (var bo = new UserBusinessObject())
                 {
-                    var user = bo.GetList(x => x.ApplicationId == applicationId && x.ExternalUserId == item).FirstOrDefault();
+                    var user = bo.GetByExternalUserId(applicationId, item);
                     if (user == null)
                         continue;
 

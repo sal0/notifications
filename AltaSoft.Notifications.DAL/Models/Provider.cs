@@ -1,6 +1,7 @@
 ﻿using AltaSoft.Notifications.DAL.Common;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,12 @@ namespace AltaSoft.Notifications.DAL
     /// </summary>
     public class Provider : ModelBase
     {
+        [Index]
+        /// <summary>
+        /// Will be identified by this field
+        /// </summary>
+        public string Key { get; set; }
+
         /// <summary>
         /// Display Name
         /// </summary>

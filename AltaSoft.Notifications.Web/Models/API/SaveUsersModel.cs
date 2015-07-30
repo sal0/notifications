@@ -5,11 +5,8 @@ using System.Web;
 
 namespace AltaSoft.Notifications.Web.Models.API
 {
-    public class SaveUsersModel
+    public class SaveUsersModel : ApplicationCredentialsModel
     {
-        public int ApplicationId { get; set; }
-        public string ApplicationSecretKey { get; set; }
-
         public List<UserInfo> Users { get; set; }
     }
 

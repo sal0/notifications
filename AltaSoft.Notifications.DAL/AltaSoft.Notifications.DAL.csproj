@@ -51,6 +51,8 @@
   <ItemGroup>
     <Compile Include="BusinessObjects\ApplicationBusinessObject.cs" />
     <Compile Include="BusinessObjects\ProviderBusinessObject.cs" />
+    <Compile Include="BusinessObjects\EventBusinessObject.cs" />
+    <Compile Include="BusinessObjects\SubscriptionBusinessObject.cs" />
     <Compile Include="BusinessObjects\UserBusinessObject.cs" />
     <Compile Include="BusinessObjects\MessageBusinessObject.cs" />
     <Compile Include="Common\BusinessObjectBase.cs" />
@@ -65,7 +67,6 @@
     <Compile Include="Models\Subscription.cs" />
     <Compile Include="Models\Template.cs" />
     <Compile Include="Models\User.cs" />
-    <Compile Include="Models\UserGroup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

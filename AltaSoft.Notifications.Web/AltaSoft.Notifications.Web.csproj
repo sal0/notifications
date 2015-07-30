@@ -178,9 +178,17 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\API\AddMessageModel.cs" />
+    <Compile Include="Models\API\APIResult.cs" />
+    <Compile Include="Models\API\DeleteEventModel.cs" />
+    <Compile Include="Models\API\GetMessagesModel.cs" />
+    <Compile Include="Models\API\GetSubscriptionsModel.cs" />
+    <Compile Include="Models\API\SaveEventViewModel.cs" />
+    <Compile Include="Models\API\SendModel.cs" />
+    <Compile Include="Models\API\ApplicationCredentialsModel.cs" />
     <Compile Include="Models\API\SaveUsersModel.cs" />
     <Compile Include="Models\API\SaveUserModel.cs" />
+    <Compile Include="Models\API\SubscribeUserModel.cs" />
+    <Compile Include="Models\API\SubscriptionResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -13,7 +13,7 @@ namespace AltaSoft.Notifications.DAL
     {
         public bool Check(int id, string secretKey)
         {
-            return db.Applications.FirstOrDefault(x => x.Id == id && x.SecretKey == secretKey) != null;
+            return db.Applications.AsNoTracking().FirstOrDefault(x => x.Id == id && x.SecretKey == secretKey) != null;
         }
     }
 }

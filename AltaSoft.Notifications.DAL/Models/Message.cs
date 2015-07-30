@@ -33,6 +33,8 @@ namespace AltaSoft.Notifications.DAL
 
         public string ErrorDetails { get; set; }
 
+        public Guid GroupId { get; set; }
+
         public MessageStates State { get; set; }
 
         public MessagePriority Priority { get; set; }
