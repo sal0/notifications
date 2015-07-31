@@ -1,6 +1,7 @@
 ﻿using AltaSoft.Notifications.DAL.Common;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -13,7 +14,7 @@ namespace AltaSoft.Notifications.DAL
     /// </summary>
     public class Provider : ModelBase
     {
-        //[Index("IX_Key", IsUnique = true)]
+        [Index("IX_Key", IsUnique = true), StringLength(20)]
         /// <summary>
         /// Will be identified by this field
         /// </summary>

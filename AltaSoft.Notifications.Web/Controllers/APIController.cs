@@ -410,11 +410,11 @@ namespace AltaSoft.Notifications.Web.Controllers
                 if (!String.IsNullOrEmpty(model.EventKeys))
                     eventKeys = model.EventKeys.Split(',').ToList();
 
-                if (!String.IsNullOrEmpty(model.ProviderIds))
-                    providerKeys = model.ProviderIds.Split(',').ToList();
+                if (!String.IsNullOrEmpty(model.ProviderKeys))
+                    providerKeys = model.ProviderKeys.Split(',').ToList();
 
-                if (!String.IsNullOrEmpty(model.ExternalUserKeys))
-                    userKeys = model.ExternalUserKeys.Split(',').ToList();
+                if (!String.IsNullOrEmpty(model.ExternalUserIds))
+                    userKeys = model.ExternalUserIds.Split(',').ToList();
 
 
                 using (var bo = new SubscriptionBusinessObject())
